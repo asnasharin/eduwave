@@ -1,17 +1,31 @@
-import express  from "express";
+import express, { Express } from "express";
+import morgan from "morgan";
+import cookieParser from "cookie-parser";
+import cors from "cors";
+import { notFound, errorHandler } from "./middlewares/errorMiddleware";
+import "dotenv/config";
 
-const app = express()
+import { env } from "./utils/envvalid";
 
-const PORT = 4000
 
-app.use(express.json())
+const app: Express = express();
 
-app.get("/", (req,res) => {
-    console.log("snfkjn")
-    console.log("jdkshfksj")
-    console.log("jerfijse")
-})
+const corsConfig = {
+  origin:
+    env.ENVIRONMENT === "development",
+  credentials: true,
+};
 
-app.listen(PORT, () => {
-    console.log(`connected to port ${PORT}`)
-})
+env.ENVIRONMENT === "development" && app.use(morgan("dev"));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+app.use(cors(corsConfig));
+
+
+
+//error handler
+app.use("*", notFound);
+app.use(errorHandler);
+
+export default app;
