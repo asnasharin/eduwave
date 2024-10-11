@@ -9,6 +9,7 @@ import Teacher from "../model/teacherProfileModel";
 import { Admin } from "mongodb";
 import { generateToken } from "../utils/generateToken";
 import admin from "../model/adminProfileModel";
+import axios from "axios";
 
 /**
  * @disc    Sending OTP through mail
@@ -134,3 +135,123 @@ export const userSignup = expressAsyncHandler(async (req: Request, res: Response
     throw new Error("Email Already Exist");
   }
 });
+
+
+/**
+ * @disc    user login
+ * @route   POST /api/login
+ * @access  PUBLIC
+ */
+export const userLogin = expressAsyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { email, password } = req.body;
+    const user = await User.findOne<IUser>({ email: email });
+    if (user) {
+      if (user.status) {
+        if (user.password && (await user.matchPassword(password))) {
+          const tocken = generateToken(user._id);
+          res.status(200).json({
+            success: true,
+            tocken: tocken,
+            user: {
+              _id: user._id,
+              email: user.email,
+              role: user.role,
+            },
+          });
+        } else {
+          res.status(401);
+          return next(Error("Invalid Credentials"));
+        }
+      } else {
+        res.status(401);
+        return next(Error("this account has been blocked!"));
+      }
+    } else {
+      res.status(401);
+      return next(Error("User Not Found!"));
+    }
+  }
+);
+
+
+/**
+ * @disc    Google Auth
+ * @route   POST /api/googleAuth
+ * @access  PUBLIC
+ */
+export const googleAuth = expressAsyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { accessToken, role } = req.body;
+
+    const response = await axios.get(
+      "https://www.googleapis.com/oauth2/v3/userinfo",
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    const {
+      name,
+      email,
+      picture,
+    }: { name: string; email: string; picture?: string } = response.data;
+
+    const isExist = await User.findOne({ email: email });
+    if (isExist) {
+      if (isExist.password) {
+        res.status(400);
+        return next(Error("Cannot Login without password"));
+      } else {
+        if (!isExist.status) {
+          next(Error("This account has been blocked!"));
+        }
+        const tocken = generateToken(isExist._id);
+        res.status(200).json({
+          success: true,
+          user: {
+            _id: isExist._id,
+            email: isExist.email,
+            role: isExist.role,
+          },
+          tocken: tocken,
+        });
+      }
+    } else {
+      if (role !== "PUBLIC") {
+        const user = await User.create({
+          email: email,
+          role: role,
+        });
+
+        if (user.role === "STUDENT") {
+          await Student.create({
+            name: name,
+            userID: user._id,
+            profile: picture,
+          });
+        } else if (user.role === "TUTOR") {
+          await Teacher.create({
+            name: name,
+            userID: user._id,
+            profile: picture,
+          });
+        }
+        const tocken = generateToken(user._id);
+        res.status(200).json({
+          success: true,
+          user: {
+            _id: user._id,
+            email: user.email,
+            role: user.role,
+          },
+          tocken: tocken,
+        });
+      } else {
+        res.status(400);
+        return next(Error("Signup as Tutor/student"));
+      }
+    }
+  }
+);
