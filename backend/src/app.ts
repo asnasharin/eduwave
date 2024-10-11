@@ -4,16 +4,15 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import userRouter from "./routes/userRoute"
 import { notFound, errorHandler } from "./middlewares/errorMiddleware";
-import "dotenv/config";
+import "dotenv/config"
 
 import { env } from "./utils/envvalid";
-
 
 const app: Express = express();
 
 const corsConfig = {
   origin:
-    env.ENVIRONMENT === "development",
+  env.ENVIRONMENT === "development" ? "http://localhost:3000" : "https://domain.com",
   credentials: true,
 };
 
