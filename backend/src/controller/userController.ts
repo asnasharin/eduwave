@@ -6,7 +6,6 @@ import bcrypt from "bcryptjs"
 import { transporter } from "../utils/mailConfig";
 import Student from "../model/studentProfileModel";
 import Teacher from "../model/teacherProfileModel";
-import { Admin } from "mongodb";
 import { generateToken } from "../utils/generateToken";
 import admin from "../model/adminProfileModel";
 import axios from "axios";
@@ -252,6 +251,85 @@ export const googleAuth = expressAsyncHandler(
         res.status(400);
         return next(Error("Signup as Tutor/student"));
       }
+    }
+  }
+);
+
+
+/**
+ * @disc    Check current Password
+ * @route   POST /api/resetPassword
+ * @access  PROTECTED
+ */
+export const checkPassword = expressAsyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const id = req?.user?._id;
+    const { currentPassword } = req.body;
+    const user = await User.findById({ _id: id });
+    if (user && (await user.matchPassword(currentPassword))) {
+      res.status(200).json({
+        success: true,
+        message: "password matching",
+      });
+    } else {
+      res.status(401);
+      next(Error("Invalid Password"));
+    }
+  }
+);
+
+
+/**
+ * @disc    Check current Password
+ * @route   PAST /api/resetPassword
+ * @access  PROTECTED
+ */
+export const resetPassword = expressAsyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const id = req?.user?._id;
+    const { newPassworrd } = req.body;
+    const user = await User.findById({ _id: id });
+    if (user) {
+      user.password = newPassworrd;
+      const updated = await user.save();
+      if (updated) {
+        res.status(200).json({
+          success: true,
+          message: "password updated Successfully!",
+        });
+      } else {
+        next(Error("some Error occured"));
+      }
+    }
+  }
+);
+
+
+/**
+ * @disc    Check current Password
+ * @route   PAST /api/userProfile/:id
+ * @access  PROTECTED
+ */
+export const getUserProfile = expressAsyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id;
+    const user = await User.findById(id);
+    let userProfile;
+    if (user?.role === "TUTOR") {
+      userProfile = await Teacher.findOne(
+        { userID: id },
+        { name: 1, profile: 1, _id: 0, userID: 1 }
+      );
+    } else if (user?.role === "STUDENT") {
+      userProfile = await Student.findOne(
+        { userID: id },
+        { name: 1, profile: 1, _id: 0, userID: 1 }
+      );
+    }
+    if (userProfile) {
+      res.status(200).json({ success: true, userProfile });
+    } else {
+      next(Error("Internal server error"));
     }
   }
 );
