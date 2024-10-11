@@ -134,3 +134,41 @@ export const userSignup = expressAsyncHandler(async (req: Request, res: Response
     throw new Error("Email Already Exist");
   }
 });
+
+
+/**
+ * @disc    user login
+ * @route   POST /api/login
+ * @access  PUBLIC
+ */
+export const userLogin = expressAsyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { email, password } = req.body;
+    const user = await User.findOne<IUser>({ email: email });
+    if (user) {
+      if (user.status) {
+        if (user.password && (await user.matchPassword(password))) {
+          const tocken = generateToken(user._id);
+          res.status(200).json({
+            success: true,
+            tocken: tocken,
+            user: {
+              _id: user._id,
+              email: user.email,
+              role: user.role,
+            },
+          });
+        } else {
+          res.status(401);
+          return next(Error("Invalid Credentials"));
+        }
+      } else {
+        res.status(401);
+        return next(Error("this account has been blocked!"));
+      }
+    } else {
+      res.status(401);
+      return next(Error("User Not Found!"));
+    }
+  }
+);
