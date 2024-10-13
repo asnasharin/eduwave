@@ -4,7 +4,8 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { useEffect, useState } from "react";
 import { validate } from "../util/validateForms.ts";
 import { userData } from "../../types/authTypes";
-// import SignupOTPmodal from "../Modal/SignupOTPModal.ts";
+import SignupOTPmodal from "../Modal/SignupOTPModal.tsx";
+import GoogleAuth from "../GoogleAuth/GoogleAuth.tsx";
 import api from "../../Api/api";
 import { AxiosError } from "axios";
 import { useAppDispatch, useAppSelector } from "../../app/store.ts";
@@ -148,13 +149,13 @@ export default function Signup({ role }: Props) {
   }
   return (
     <>
-      {/* <SignupOTPmodal
+      <SignupOTPmodal
         openModal={openModal}
         setOpenModal={setOpenModal}
         email={userData.email}
         isSubmit={isSubmit}
         setFormSubmit={setFormSubmit}
-      /> */}
+      />
       <div className="flex justify-center items-center bg-gradient-to-r from-custom-gradient-start to-custom-gradient-end h-[100vh]  md:px-72 px-4 w-full">
         <div className="w-[100%] relative flex justify-between bg-white rounded-3xl">
           <div className="bg-primary w-72 left-20 hidden md:inline-flex rounded-3xl"></div>
@@ -162,7 +163,7 @@ export default function Signup({ role }: Props) {
             <h1 className="text-primary font-black text-5xl mt-9 mb-2">
               SIGNUP
             </h1>
-            {/* <GoogleAuth method="Sign Up" role={role} /> */}
+            <GoogleAuth method="Sign Up" role={role} />
             <form
               onSubmit={handleSubmit}
               className="flex flex-col items-start w-[70%]"

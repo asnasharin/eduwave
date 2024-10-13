@@ -11,8 +11,8 @@ import { env } from "./utils/envvalid";
 const app: Express = express();
 
 const corsConfig = {
-  origin:
-  env.ENVIRONMENT === "development" ? "http://localhost:3000" : "https://domain.com",
+  origin: true,
+  // env.ENVIRONMENT === "development" ? "http://localhost:3000" : "https://domain.com",
   credentials: true,
 };
 
