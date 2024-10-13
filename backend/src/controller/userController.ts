@@ -182,12 +182,14 @@ export const userLogin = expressAsyncHandler(
 export const googleAuth = expressAsyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const { accessToken, role } = req.body;
-
+    
+    console.log(accessToken)
     const response = await axios.get(
-      "https://www.googleapis.com/oauth2/v3/userinfo",
+      "https://www.googleapis.com/oauth2/v1/userinfo",
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
+          Accept: "application/json"
         },
       }
     );
