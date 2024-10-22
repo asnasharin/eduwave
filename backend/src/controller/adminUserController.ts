@@ -129,3 +129,51 @@ export const getAllstudnets = asynchandler(
     }
   );
   
+  
+/**
+ * @disc    Block user
+ * @route   PATCH /api/admin/user-block/:id
+ * @access  private
+ */
+export const blockUser = asynchandler(
+    async (req: Request, res: Response, next: NextFunction) => {
+      const userId = req.params.id;
+      const blockUser = await User.findByIdAndUpdate(
+        { _id: userId },
+        { status: false },
+        { new: true }
+      );
+      if (blockUser) {
+        res.status(200).json({
+          success: true,
+          message: "user Blocked!",
+        });
+      } else {
+        next(Error("something went wrong!"));
+      }
+    }
+  );
+  
+  /**
+   * @disc    Unblock user
+   * @route   PATCH /api/admin/user-unblock/:id
+   * @access  private
+   */
+  export const unblockUser = asynchandler(
+    async (req: Request, res: Response, next: NextFunction) => {
+      const userId = req.params.id;
+      const blockUser = await User.findByIdAndUpdate(
+        { _id: userId },
+        { status: true },
+        { new: true }
+      );
+      if (blockUser) {
+        res.status(200).json({
+          success: true,
+          message: "user unblocked!",
+        });
+      } else {
+        next(Error("something went wrong!"));
+      }
+    }
+  );
