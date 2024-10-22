@@ -22,3 +22,36 @@ export const getAdminProfile = asynchandler(
     }
   }
 );
+
+
+/**
+ * @disc    Update Profile Picture
+ * @route   GET /api/admin/updateProfilePicture
+ * @access  private
+ */
+export const updateProfilePicture = asynchandler(
+    async (req: Request, res: Response, next: NextFunction) => {
+      const userID = req.user?._id;
+      const { url } = req.body;
+      const updatedUser = await Admin.findOneAndUpdate(
+        { userID: new mongoose.Types.ObjectId(userID) },
+        {
+          profile: url,
+        },
+        {
+          new: true,
+        }
+      );
+      if (updatedUser) {
+        res.status(200).json({
+          success: true,
+          message: "Profile Updated Successfully",
+          userProfile: updatedUser,
+        });
+      } else {
+        res.status(400);
+        return next(Error("Some Error Occured"));
+      }
+    }
+  );
+  
