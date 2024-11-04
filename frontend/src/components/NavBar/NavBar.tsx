@@ -2,7 +2,7 @@ import { Dropdown, Navbar } from "flowbite-react";
 import { useAppDispatch } from "../../app/store";
 import { customTheme } from "../util/navCustomTheme";
 import { Flowbite } from "flowbite-react";
-import Logo from "../../assets/Logo.svg";
+import Logo from "../../assets/react.svg";
 import { Link } from "react-router-dom";
 import { logout } from "../../features/auth/authSlice";
 import InsertCommentIcon from "@mui/icons-material/InsertComment";
