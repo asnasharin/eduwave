@@ -6,6 +6,8 @@ import userSlice from "../features/users/userSlice"
 import studentPosts from "../features/studentPosts/StudentPostsSlice"
 import courseSlice from "../features/course/courseSlice"
 import tutorReducer from "../features/tutors/tutorSlice";
+import courseDetailSlice from "../features/course/courseDetails/CourseDetails";
+import enrollmentSlice from "../features/enrollment/enrollmentSlice";
 
 
 export const store = configureStore({
@@ -14,7 +16,9 @@ export const store = configureStore({
     userProfile: userSlice,
     studentPosts: studentPosts,
     course: courseSlice,
-    tutor: tutorReducer
+    tutor: tutorReducer,
+    courseDetail: courseDetailSlice,
+    enrollments: enrollmentSlice,
   },
 });
 
