@@ -78,7 +78,7 @@ export default function StudentNav() {
               <Navbar.Toggle />
             </div>
             <Navbar.Collapse>
-              <Link to={"/student"}>
+              <Link to={"/"}>
                 <Navbar.Link
                   active={
                     location.pathname === "/student" ||

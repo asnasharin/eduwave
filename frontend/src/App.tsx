@@ -7,7 +7,7 @@ import LoginPage from './pages/LoginPage/LoginPage'
 import CoursePage from './pages/CoursesPage/CoursePage'
 import TutorHomePage from './pages/TutorHomePage/TutorHomePage'
 import TutorProfileCard from './components/TutorProfileCard/TutorProfileCard'
-import StudentRequest from './components/StudentRequest/StudentRequest'
+import StudentRequests from './components/StudentRequest/StudentRequest'
 
 function App() {
  
@@ -22,7 +22,7 @@ function App() {
         <Route path='/courses' element={<CoursePage />} />
         <Route path='/tutor' element={<TutorHomePage />}/>
         <Route path='/tutor/profile' element={<TutorProfileCard />} />
-        <Route path='/student/requests' element={<StudentRequest />} />
+        <Route path='/student/requests' element={<StudentRequests />} />
       </Routes>
     </>
   )
