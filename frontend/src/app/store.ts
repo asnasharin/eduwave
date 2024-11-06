@@ -16,7 +16,7 @@ export const store = configureStore({
     userProfile: userSlice,
     studentPosts: studentPosts,
     course: courseSlice,
-    tutor: tutorReducer,
+    tutors: tutorReducer,
     courseDetail: courseDetailSlice,
     enrollments: enrollmentSlice,
   },
