@@ -8,6 +8,7 @@ import CoursePage from './pages/CoursesPage/CoursePage'
 import TutorHomePage from './pages/TutorHomePage/TutorHomePage'
 import TutorProfileCard from './components/TutorProfileCard/TutorProfileCard'
 import StudentRequests from './components/StudentRequest/StudentRequest'
+import VideoChat from './components/VideoRoom/VideoRoom'
 
 function App() {
  
@@ -22,7 +23,8 @@ function App() {
         <Route path='/courses' element={<CoursePage />} />
         <Route path='/tutor' element={<TutorHomePage />}/>
         <Route path='/tutor/profile' element={<TutorProfileCard />} />
-        <Route path='/student/requests' element={<StudentRequests />} />
+        <Route path='/student/requests'  element={<StudentRequests />}/>
+        <Route path="/student/video-chat/:id" element={<VideoChat />} />
       </Routes>
     </>
   )
