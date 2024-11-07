@@ -2,17 +2,20 @@ import express, { Express } from "express";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import userRouter from "./routes/userRoute"
 import { notFound, errorHandler } from "./middlewares/errorMiddleware";
-import "dotenv/config"
+import "dotenv/config";
 
 import { env } from "./utils/envvalid";
+
+import userRouter from "./routes/userRoute";
 
 const app: Express = express();
 
 const corsConfig = {
-  origin: true,
-  // env.ENVIRONMENT === "development" ? "http://localhost:3000" : "https://domain.com",
+  origin:
+    env.ENVIRONMENT === "development"
+      ? env.FRONTENT_URL
+      : env.FRONTENT_URL_DEPLOYED,
   credentials: true,
 };
 
@@ -22,8 +25,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(cors(corsConfig));
 
-app.use("/api", userRouter)
-
+app.use("/api", userRouter);
 
 //error handler
 app.use("*", notFound);
