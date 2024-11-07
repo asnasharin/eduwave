@@ -1,3 +1,30 @@
-/dist
+# Dependencies
 /node_modules
+/dist
+
+# Build output
+/.cache
+/.pnp
 /.env
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Runtime data
+/tmp
+/cache
+
+# Logs
+/logs
+*.log
+
+# Editor/IDE specific
+.vscode
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw*
